@@ -264,6 +264,6 @@ public class Version {
 
     // Update property which records update/patch version: Ex. update-1, cp1, etc.
     public static String getUpdateVersion() {
-        return "";
+        return "Update 09"; //CP Version
     }
 }

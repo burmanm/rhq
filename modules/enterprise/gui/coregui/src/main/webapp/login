@@ -88,7 +88,7 @@
         </div><!--/.col-*-->
         <div class="col-sm-5 col-md-6 col-lg-7 details">
           <br/>
-          <p><strong>Welcome to RHQ ${project.version}!</strong><br/>
+          <p><strong>Welcome to RHQ ${project.version} Update 09!</strong><br/><!-- CP Version -->
           RHQ is an enterprise management solution for JBoss middleware projects, Tomcat, Apache Web Server, and numerous other server-side applications.<br/></p>
         </div><!--/.col-*-->
       </div><!--/.row-->

@@ -683,6 +683,6 @@ public class CoreGUI implements EntryPoint, ValueChangeHandler<String>, Event.Na
 
     // Update property which records update/patch version: Ex. update-1, cp1, etc.
     public static String getUpdateVersion() {
-        return "";
+        return "Update 09"; //CP Version
     }
 }

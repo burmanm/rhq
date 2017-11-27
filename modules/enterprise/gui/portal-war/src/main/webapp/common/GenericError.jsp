@@ -93,7 +93,7 @@ if (exception != null) {
 
     <% if (request.getAttribute("javax.servlet.error.message") != null) { %>
     <tr>
-        <td class="ErrorBlock" colspan="2"><%=request.getAttribute("javax.servlet.error.message")%></td>
+        <td class="ErrorBlock" colspan="2"><c:out value="${requestScope['javax.servlet.error.message']}"/></td>
     </tr>
     <% } %>
 

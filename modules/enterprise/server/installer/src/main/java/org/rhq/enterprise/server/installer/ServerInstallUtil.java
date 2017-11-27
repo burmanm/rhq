@@ -272,10 +272,15 @@ public class ServerInstallUtil {
         // Tweek the mail configuration that comes out of box. Setup a batch request to write the proper attributes.
 
         // First, the from address (TODO: there is also a "ssl", "username" and "password" attribute we could set for authz)
-        Address addr = Address.root().add(JBossASClient.SUBSYSTEM, "mail", "mail-session", "java:jboss/mail/Default");
+        //spinder: 9-11-15: EAP 6.3.x->6.4.x content for defining default mail subsystem has changed. Fixing during prod
+        Address addr = Address.root().add(JBossASClient.SUBSYSTEM, "mail", "mail-session", "default");
+        Address addr63 = Address.root().add(JBossASClient.SUBSYSTEM, "mail", "mail-session", "java:jboss/mail/Default");
         ModelNode writeFromAddr = JBossASClient.createRequest(JBossASClient.WRITE_ATTRIBUTE, addr);
         writeFromAddr.get(JBossASClient.NAME).set("from");
         writeFromAddr.get(JBossASClient.VALUE).setExpression(fromAddressExpr);
+        ModelNode writeFromAddr63 = JBossASClient.createRequest(JBossASClient.WRITE_ATTRIBUTE, addr63);
+        writeFromAddr63.get(JBossASClient.NAME).set("from");
+        writeFromAddr63.get(JBossASClient.VALUE).setExpression(fromAddressExpr);
 
         // now the SMTP host
         addr = Address.root().add("socket-binding-group", "standard-sockets",
@@ -292,10 +297,19 @@ public class ServerInstallUtil {
         JBossASClient.setPossibleExpression(writePort, JBossASClient.VALUE, smtpPortExpr);
 
         ModelNode batch = JBossASClient.createBatchRequest(writeFromAddr, writeHost, writePort);
+        ModelNode batch63 = JBossASClient.createBatchRequest(writeFromAddr63, writeHost, writePort);
         JBossASClient client = new JBossASClient(mcc);
+
         ModelNode response = client.execute(batch);
+        //BZ 1264412: retry once with 6.3.x format in case mail setup fails.
         if (!JBossASClient.isSuccess(response)) {
-            throw new FailureException(response, "Failed to setup mail service");
+            String initialFailure = JBossASClient.getFailureDescription(response);
+            LOG.warn("Initial setup of mail service failed : " + initialFailure);
+            LOG.warn("Retrying mail service setup...");
+            response = client.execute(batch63);
+        }
+        if (!JBossASClient.isSuccess(response)) {
+            throw new FailureException(response, "Failed again to setup mail service");
         }
         LOG.info("Mail service has been configured.");
     }
