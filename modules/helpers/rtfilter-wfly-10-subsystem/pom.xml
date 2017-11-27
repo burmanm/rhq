@@ -38,7 +38,7 @@
 
   <properties>
     <version.wildfly>10.0.0.Final</version.wildfly>
-    <version.wildfly.core>2.0.10.Final</version.wildfly.core>
+    <version.wildfly.core>2.0.13.Final-redhat-1</version.wildfly.core>
     <moduleName>${project.groupId}.${project.artifactId}</moduleName>
   </properties>
 
